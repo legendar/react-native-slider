@@ -10,7 +10,8 @@ import {
   StyleSheet,
   PanResponder,
   View,
-  Easing
+  Easing,
+  Image
 } from "react-native";
 
 const shallowCompare = require('react-addons-shallow-compare'),
@@ -162,6 +163,17 @@ var Slider = React.createClass({
     * Used to configure the animation parameters.  These are the same parameters in the Animated library.
     */
     animationConfig : PropTypes.object,
+
+    /**
+    * An image applied as background to track
+    */
+    // FIXME
+    ////trackImage : PropTypes.source,
+
+    /**
+     * The style applied to the track background image.
+     */
+    trackImageStyle : View.propTypes.style,
   },
   getInitialState() {
     return {
@@ -221,6 +233,7 @@ var Slider = React.createClass({
       nextState
     ) || !styleEqual(this.props.style, nextProps.style)
       || !styleEqual(this.props.trackStyle, nextProps.trackStyle)
+      || !styleEqual(this.props.trackImageStyle, nextProps.trackImageStyle)
       || !styleEqual(this.props.thumbStyle, nextProps.thumbStyle);
   },
   render() {
@@ -229,6 +242,8 @@ var Slider = React.createClass({
       maximumValue,
       minimumTrackTintColor,
       maximumTrackTintColor,
+      trackImage,
+      trackImageStyle,
       thumbTintColor,
       styles,
       style,
@@ -263,7 +278,9 @@ var Slider = React.createClass({
       <View {...other} style={[mainStyles.container, style]} onLayout={this._measureContainer}>
         <View
           style={[{backgroundColor: maximumTrackTintColor,}, mainStyles.track, trackStyle]}
-          onLayout={this._measureTrack} />
+          onLayout={this._measureTrack}>
+          { trackImage && <Image source={trackImage} style={[mainStyles.trackImage, trackImageStyle]} resizeMode='contain' />}
+        </View>
         <Animated.View style={[mainStyles.track, trackStyle, minimumTrackStyle]} />
         <Animated.View
           onLayout={this._measureThumb}
@@ -296,6 +313,7 @@ var Slider = React.createClass({
       onSlidingComplete,
       style,
       trackStyle,
+      trackImageStyle,
       thumbStyle,
       ...otherProps,
     } = props;
@@ -527,6 +545,15 @@ var defaultStyles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'green',
     opacity: 0.5,
+  },
+  trackImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: undefined,
+    height: undefined
   }
 });
 
